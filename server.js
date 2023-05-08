@@ -8,13 +8,7 @@ const ListingModel = require('./models/schema.js')
 app.use(methodOverride('_method'))
 app.use(express.static('public'))
 app.use(express.urlencoded({extended: true}))
-mongoose.connect('mongodb://localhost:27017/listingz').then(() => {
-    console.log('connection with mongo established');
-})
 
-app.listen(3000, () => {
-    console.log('listening');
-})
 
 // SEED ROUTE
 // app.get('/seed', (req, res) => {
@@ -28,23 +22,9 @@ app.get('/', (req, res) => {
     res.render('home.ejs')
 })
 
-
-// INDEX
-app.get('/browse', (req, res) => {
-    ListingModel.find({}).then((listing) => {
-        res.render('index.ejs', { data: listing })})
-    });
-
 //NEW
 app.get('/new', (req, res) => {
     res.render('new.ejs')
-})
-
-// SHOW
-app.get('/:id', (req, res) => {
-    ListingModel.findById(req.params.id).then((listing) => {
-    res.render('show.ejs', { data: listing })
-    })
 })
 
 // CREATE
@@ -86,14 +66,31 @@ app.post('/browse', (req, res) => {
 }))
 })
 
-// DELETE
+// // INDEX
+app.get('/browse', (req, res) => {
+    ListingModel.find({}).then((listing) => {
+        res.render('index.ejs', { data: listing })})
+    });
+
+
+
+// // SHOW
+app.get('/:id', (req, res) => {
+    ListingModel.findById(req.params.id).then((listing) => {
+    res.render('show.ejs', { data: listing })
+    })
+})
+
+
+
+// // DELETE
 app.delete('/:id', (req, res) => {
     ListingModel.findByIdAndRemove(req.params.id).then(() => {
         res.redirect('/browse')
     })
 })
 
-// EDIT
+// // EDIT
 app.get('/:id/edit', (req, res) => {
     ListingModel.findById(req.params.id).then((selectedListing) => {
         res.render('edit.ejs', {
@@ -102,7 +99,7 @@ app.get('/:id/edit', (req, res) => {
     })
 })
 
-// UPDATE
+// // UPDATE
 app.put('/:id', (req, res) => {
     const newListing = {
         address: {},
@@ -139,3 +136,11 @@ app.put('/:id', (req, res) => {
         res.redirect('/browse')
       })
     })
+
+    app.listen(3000, () => {
+    console.log('listening');
+    })
+    mongoose.connect('mongodb://localhost:27017/listingz').then(() => {
+    console.log('connection with mongo established');
+    })
+
