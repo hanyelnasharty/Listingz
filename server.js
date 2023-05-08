@@ -4,6 +4,9 @@ const methodOverride = require('method-override')
 const app = express()
 const Listing = require('./models/listing.js');
 const ListingModel = require('./models/schema.js')
+require('dotenv').config()
+const PORT = process.env.PORT
+const MONGODB_URI = process.env.MONGODB_URI;
 
 app.use(methodOverride('_method'))
 app.use(express.static('public'))
@@ -137,10 +140,10 @@ app.put('/:id', (req, res) => {
       })
     })
 
-    app.listen(3000, () => {
-    console.log('listening');
+    app.listen(PORT, () => {
+    console.log('listening on port: ', PORT);
     })
-    mongoose.connect('mongodb://localhost:27017/listingz').then(() => {
+    mongoose.connect(MONGODB_URI).then(() => {
     console.log('connection with mongo established');
     })
 
